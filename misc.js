@@ -184,10 +184,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       // Seiten-Besuche zählen (per localStorage)
       // ------------------------------------------------------------
       let visits = 0;                                                // NEU4
+      let pageVisit = 0;
       visits = parseInt(localStorage.getItem("visits") || "0", 10) + 1; // NEU4
-      console.log("visits: ", visits);
+      pageVisits = parseInt(localStorage.getItem(window.location.path) || "0", 10) + 1; // NEU4
+      // console.log("visits: ", visits);
       if (visits === 5) { viewStarRatingModal(); }                 // NEU4
       localStorage.setItem("visits", visits);                      // NEU4
+      localStorage.setItem(window.loaction.path, pageVisits);                      // NEU4
       // ------------------------------------------------------------
 
     } else {
