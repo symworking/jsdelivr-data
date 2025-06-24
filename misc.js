@@ -71,27 +71,27 @@ document.addEventListener("DOMContentLoaded", async function () {
       // --------------------------------------------------------------------
       // Zufällige Auswahl von 6 offenen Aktivitäten aus den ersten 10
       // --------------------------------------------------------------------
-      const offeneKandidatenIDs = [];                                               // NEU2
-      aktivitaeten.forEach((aktivitaetEl) => {                                      // NEU2
-        const idTmp = aktivitaetEl.getAttribute("data-webflow-aktivitaet-id");      // NEU2
-        const istAbgehaktTmp = Array.isArray(abgehakte_aktivitaeten)                // NEU2
-          ? abgehakte_aktivitaeten.includes(idTmp)                                  // NEU2
-          : false;                                                                  // NEU2
-        const istAbgehaktViewTmp = aktivitaetEl.getAttribute("data-view-abgehakt"); // NEU2
-        if (                                                                  // NEU2
-          !istAbgehaktTmp &&                                                  // NEU2
-          !istAbgehaktViewTmp &&                                              // NEU2
-          offeneKandidatenIDs.length < 10                                     // NEU2
-        ) {                                                                   // NEU2
-          offeneKandidatenIDs.push(idTmp);                                    // NEU2
-        }                                                                     // NEU2
-      });                                                                     // NEU2
+      const offeneKandidatenIDs = [];
+      aktivitaeten.forEach((aktivitaetEl) => {
+        const idTmp = aktivitaetEl.getAttribute("data-webflow-aktivitaet-id");
+        const istAbgehaktTmp = Array.isArray(abgehakte_aktivitaeten)
+          ? abgehakte_aktivitaeten.includes(idTmp)
+          : false;
+        const istAbgehaktViewTmp = aktivitaetEl.getAttribute("data-view-abgehakt");
+        if (
+          !istAbgehaktTmp &&
+          !istAbgehaktViewTmp &&
+          offeneKandidatenIDs.length < 10
+        ) {
+          offeneKandidatenIDs.push(idTmp);
+        }
+      });
 
-      const behaltenOffeneIDs = new Set();                                    // NEU2
-      while (behaltenOffeneIDs.size < Math.min(6, offeneKandidatenIDs.length)) { // NEU2
-        const idx = Math.floor(Math.random() * offeneKandidatenIDs.length);   // NEU2
-        behaltenOffeneIDs.add(offeneKandidatenIDs[idx]);                       // NEU2
-      }                                                                       // NEU2
+      const behaltenOffeneIDs = new Set();
+      while (behaltenOffeneIDs.size < Math.min(6, offeneKandidatenIDs.length)) {
+        const idx = Math.floor(Math.random() * offeneKandidatenIDs.length);
+        behaltenOffeneIDs.add(offeneKandidatenIDs[idx]);
+      }
       // --------------------------------------------------------------------
 
       aktivitaeten.forEach((aktivitaetEl) => {
@@ -110,13 +110,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         // Entferne offene Elemente, wenn sie NICHT zu den
         // zufällig selektierten 6 aus den ersten 10 gehören
         // ----------------------------------------------------------------
-        if (!istBereitsAbgehakt && !istAbgehaktView) {          // NEU2
-          if (!behaltenOffeneIDs.has(itemID)) {                 // NEU2
-            aktivitaetEl.remove();                              // NEU2
-            return;                                             // NEU2 – Rest überspringen
-          }                                                     // NEU2
-          anzahlNichtAbgehakt++;                                // NEU2 (nur noch Statistik)
-        }                                                       // NEU2
+        if (!istBereitsAbgehakt && !istAbgehaktView) {
+          if (!behaltenOffeneIDs.has(itemID)) {
+            aktivitaetEl.remove();
+            return;
+          }
+          anzahlNichtAbgehakt++;
+        }
         // ----------------------------------------------------------------
         
         if (abgehakte_aktivitaeten.includes(itemID)) {
@@ -185,12 +185,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       // ------------------------------------------------------------
       let visits = 0;                                                // NEU4
       let pageVisit = 0;
+      let pageVisitURL = window.loaction.path;
       visits = parseInt(localStorage.getItem("visits") || "0", 10) + 1; // NEU4
-      pageVisits = parseInt(localStorage.getItem(window.location.path) || "0", 10) + 1; // NEU4
+      pageVisits = parseInt(localStorage.getItem(pageVisitURL) || "0", 10) + 1; // NEU4
       // console.log("visits: ", visits);
       if (visits === 5) { viewStarRatingModal(); }                 // NEU4
       localStorage.setItem("visits", visits);                      // NEU4
-      localStorage.setItem(window.loaction.path, pageVisits);                      // NEU4
+      console.log("pageVisitURL: ", pageVisitURL);
+      localStorage.setItem(pageVisitURL, pageVisits);                      // NEU4
       // ------------------------------------------------------------
 
     } else {
