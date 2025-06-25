@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       // ------------------------------------------------------------
       let visits = 0;
       let pageVisits = 0;
-      let pageVisitURL = window.loaction.path;
+      let pageVisitURL = window.location.pathname;
       visits = parseInt(localStorage.getItem("visits") || "0", 10) + 1;
       pageVisits = parseInt(localStorage.getItem(pageVisitURL) || "0", 10) + 1;
       // console.log("visits: ", visits);
