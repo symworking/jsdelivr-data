@@ -1,3 +1,6 @@
+// Globale Variablen
+let totalPageVisits = 0;
+let currentPageVisits = 0;
 
 document.addEventListener("DOMContentLoaded", async function () {
   // console.log("📦 DOM ist geladen.");
@@ -183,18 +186,43 @@ document.addEventListener("DOMContentLoaded", async function () {
       // ------------------------------------------------------------
       // Seiten-Besuche zählen (per localStorage)
       // ------------------------------------------------------------
-      let visits = 0;
-      let pageVisits = 0;
-      let pageVisitURL = window.location.pathname;
-      visits = parseInt(localStorage.getItem("visits") || "0", 10) + 1;
-      pageVisits = parseInt(localStorage.getItem(pageVisitURL) || "0", 10) + 1;
-      // console.log("visits: ", visits);
-      if (visits === 5) { viewStarRatingModal(); }
-      localStorage.setItem("visits", visits);
-      console.log("pageVisitURL: ", pageVisitURL);
-      localStorage.setItem(pageVisitURL, pageVisits);
+      totalPageVisits = parseInt(member.customFields["total-page-visits"] || "0", 10) + 1;
+      currentPageVisits = parseInt(localStorage.getItem(window.location.pathname) || "0", 10) + 1;
+      console.log("totalPageVisits: ", totalPageVisits);
+      console.log("currentPageVisits: ", currentPageVisits);
+      // 🔧 Wert in Memberstack bzw. im Local Storage speichern
+      await window.$memberstackDom.updateMember({
+        customFields: {"total-page-visits": totalPageVisits}
+      });
+      localStorage.setItem(window.location.pathname, totalPageVisits);
       // ------------------------------------------------------------
 
+      // Alle Feedback-Formulare mit Trigger-Daten prüfen
+      const allFeedbackForms = document.querySelectorAll('.star-rating-modal-form');
+
+      allFeedbackForms.forEach((formWrapper) => {
+        const triggerType = formWrapper.getAttribute("data-feedback-trigger-type");
+        const triggerCount = parseInt(formWrapper.getAttribute("data-feedback-trigger-count") || "0", 10);
+
+        const modalWrapper = formWrapper.closest("#star-rating-modal-wrapper"); // 🔍 findet Modal für dieses Formular
+
+        // Zähle Seitenbesuche
+        let visits = parseInt(localStorage.getItem("visits") || "0", 10) + 1;
+        let pageVisitURL = window.location.pathname;
+        let pageVisits = parseInt(localStorage.getItem(pageVisitURL) || "0", 10) + 1;
+
+        localStorage.setItem("visits", visits);
+        localStorage.setItem(pageVisitURL, pageVisits);
+
+        // Entscheidung: Anzeigen oder nicht?
+        const sollAnzeigen =
+          (triggerType === "Seitenaufrufe insgesamt" && visits === triggerCount) ||
+          (triggerType === "Seitenaufrufe einer URL" && pageVisits === triggerCount);
+
+        if (sollAnzeigen && modalWrapper) {
+          modalWrapper.classList.remove("display-none");
+        }
+      });
     } else {
       console.log("⚠️ Kein Member eingeloggt.");
     }
@@ -222,6 +250,18 @@ function initStarRating(wrapper){
   const form   = wrapper.closest('form');
   let current  = +valueInput.value || 0;
 
+  // Modal-Form-Wrapper mit Trigger-Daten lesen
+  const formWrapper = form.closest(".star-rating-modal-form"); // erwartet: data-Attribute am Wrapper
+  const modalWrapper = formWrapper?.closest(".star-rating-modal-wrapper");
+
+  const sollAnzeigen =
+    (triggerType === "Seitenaufrufe insgesamt" && visits === triggerCount) ||
+    (triggerType === "Seitenaufrufe einer URL" && pageVisits === triggerCount);
+
+  if (sollAnzeigen) {
+    modalWrapper.classList.remove("display-none");
+  }
+
   /* 1 | Visuelle + ARIA-Initialisierung */
   wrapper.setAttribute('role','radiogroup');
   stars.forEach((star,i)=>{
@@ -236,9 +276,8 @@ function initStarRating(wrapper){
       current = val;
       valueInput.value = current;   // ❶ an Form übergeben
       paint(current);
-		  /* Modal-Wrapper nach erfolgreicher Submission verstecken */
-		  const modal = document.getElementById("star-rating-modal-wrapper");
-		  if(modal) modal.classList.add('display-none');
+      /* Modal-Wrapper nach erfolgreicher Submission verstecken */
+      modalWrapper.classList.add('display-none');
       /* ❷ sofort absenden – bevorzugt modernes requestSubmit() */
       if(form.requestSubmit){ form.requestSubmit(); }
       else                  { form.submit();       }
