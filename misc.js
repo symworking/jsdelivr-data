@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   try {
     const { data: member } = await window.$memberstackDom.getCurrentMember();
-    console.log("👤 Aktueller Member:", member);
+    // console.log("👤 Aktueller Member:", member);
 
     if (member) {
       const customFields = member.customFields || {};
@@ -183,16 +183,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       // ------------------------------------------------------------
       // Seiten-Besuche zählen (per localStorage)
       // ------------------------------------------------------------
-      let visits = 0;                                                // NEU4
-      let pageVisit = 0;
+      let visits = 0;
+      let pageVisits = 0;
       let pageVisitURL = window.loaction.path;
-      visits = parseInt(localStorage.getItem("visits") || "0", 10) + 1; // NEU4
-      pageVisits = parseInt(localStorage.getItem(pageVisitURL) || "0", 10) + 1; // NEU4
+      visits = parseInt(localStorage.getItem("visits") || "0", 10) + 1;
+      pageVisits = parseInt(localStorage.getItem(pageVisitURL) || "0", 10) + 1;
       // console.log("visits: ", visits);
-      if (visits === 5) { viewStarRatingModal(); }                 // NEU4
-      localStorage.setItem("visits", visits);                      // NEU4
+      if (visits === 5) { viewStarRatingModal(); }
+      localStorage.setItem("visits", visits);
       console.log("pageVisitURL: ", pageVisitURL);
-      localStorage.setItem(pageVisitURL, pageVisits);                      // NEU4
+      localStorage.setItem(pageVisitURL, pageVisits);
       // ------------------------------------------------------------
 
     } else {
