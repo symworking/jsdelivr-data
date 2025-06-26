@@ -1,32 +1,9 @@
 // Globale Variablen
-let totalPageVisits = 0;
-let currentPageVisits = 0;
 
 document.addEventListener("DOMContentLoaded", async function () {
   // console.log("📦 DOM ist geladen.");
-  function loadScript(file) {
-    const newScript = document.createElement('script');
-    newScript.setAttribute('src', file);
-    newScript.setAttribute('type', 'text/javascript');
-    newScript.setAttribute('async', 'true');
-
-    newScript.onload = () => console.log(`${file} loaded successfully.`);
-    newScript.onerror = () => console.error(`Error loading script: ${file}`);
-
-    document.head.appendChild(newScript);
-  }
-
-  // --------------------------------------------------------------
-  // Hilfsfunktion zum anzeigen des Sterne Bewertungs Modals
-  // --------------------------------------------------------------
-  function viewStarRatingModal() {
-    const modal = document.getElementById("star-rating-modal-wrapper");
-    if (modal) modal.classList.remove("display-none");
-  }
-  // --------------------------------------------------------------
 
   loadScript("https://unpkg.com/emoji-blast/dist/global.js");
-
 
   try {
     const { data: member } = await window.$memberstackDom.getCurrentMember();
@@ -159,30 +136,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       });
 
-      // Alle Elemente mit Klasse .zitat-item (aus dem Feld Name)
-      const zitatElemente = Array.from(document.querySelectorAll("#zitate-item"));
-      const zitatElementeName = Array.from(document.querySelectorAll("#zitate-item-name"));
-      const zitatElementeAutor = Array.from(document.querySelectorAll("#zitate-item-autor"));
-      // console.log("zitatElemente:", zitatElemente);
-
-      if (zitatElemente.length > 0) {
-        const zufallsIndex = Math.floor(Math.random() * zitatElemente.length);
-        const zitat = zitatElementeName[zufallsIndex].textContent.trim();
-        const autor = zitatElementeAutor[zufallsIndex].textContent.trim();
-
-        const ausgabeFeld = document.getElementById("Inspiration-Zitat");
-        // console.log("ausgabeFeld:", ausgabeFeld);
-        if (ausgabeFeld) {
-          ausgabeFeld.textContent = zitat;
-          // console.log("ausgabeFeld.textContent:", ausgabeFeld.textContent);
-        }
-        const autorFeld = document.getElementById("Inspiration-Zitat-Autor");
-        // console.log("autorFeld:", autorFeld);
-        if (autorFeld) {
-          autorFeld.textContent = autor;
-          // console.log("autorFeld.textContent:", autorFeld.textContent);
-        }
-      }
       // ------------------------------------------------------------
       // Seiten-Besuche zählen (per localStorage)
       // ------------------------------------------------------------
