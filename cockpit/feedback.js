@@ -85,6 +85,7 @@ function initStarRating(wrapper){
     stars.forEach((s,idx)=>{
       const filled = idx < r;
       s.classList.toggle('filled',filled);
+      s.style.color = filled ? '#ffbf00' : '';
       s.setAttribute('aria-checked',filled);
     });
   }
