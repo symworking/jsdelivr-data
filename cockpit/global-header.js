@@ -1,0 +1,1 @@
+localStorage.setItem('locat', location.href);
